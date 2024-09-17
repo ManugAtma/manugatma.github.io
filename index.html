@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play Memory</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+    </style>
+    <link rel="stylesheet" href="memory.css">
+    <script>
+        // to prevent Firefox FOUC, this must be here
+        let FF_FOUC_FIX;
+    </script>
+</head>
+
+
+<body>
+    <div class="wrapper">
+
+
+        <div class="header">
+            <h2>Play Memory!</h2>
+            <div class="scores-container">
+                <table class="scores">
+                    <tr>
+                        <td>Player</td>
+                        <td>Points</td>
+                        <td>Attempts</td>
+                    </tr>
+                    <!-- 
+                    rows for each player created dynamically 
+                    by js function initScoreBoard() 
+                    -->
+                </table>
+            </div>
+
+        </div>  <!-- .header -->
+       
+
+        <div class="info-box-container">
+            <!-- shows infos to the user -->
+            <div class="info-box">
+            </div>
+
+            <button class="new-game-btn">New Game</button>
+        </div> <!-- .info-box-container -->
+        
+    
+        <div class="field-container">
+            <!-- playing field -->
+            <table class="field">
+                <tr>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                    <td>
+                        <div class="card-container">
+
+                        </div>
+                    </td>
+                </tr>
+
+            </table> <!-- .field -->
+
+        </div> <!-- .field-container --> 
+
+    </div>
+
+
+    <!-- 
+    windows for modal dialog, started by click on "new game". 
+    hidden in the beginning. 
+    -->
+
+    <div class="modal-window" id="modal-num-of-players">
+        <div class="form-container">
+            <span>How many people are playing?</span>
+            <form action="">
+                <select name="number" id="number" tabindex="1">
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4">4 Players</option>
+                    <option value="5">5 Players</option>
+                </select>
+                <button class="modal-continue-play-btn">continue</button>
+                <button class="modal-x-btn">X</button>
+            </form>
+        </div> <!-- .form-container -->
+    </div>   <!-- #modal-num-of-players -->  
+
+
+    <div class="modal-window" id="modal-player-names">
+        <div class="form-container">
+            <span>If you like, name the players.</span>
+
+            <form action="">
+            <!-- form elements dynamically created by js function calcNameModal() -->
+            </form>
+
+            <button class="modal-x-btn" tabindex="1">X</button>
+            <button class="modal-continue-play-btn" tabindex="0">continue</button>
+            <button class="modal-back-btn">back</button>
+        </div> <!-- .form-container -->
+    </div> <!-- "#modal-player-names -->
+
+
+    <div class="modal-window" id="modal-themes">
+        <div class="form-container">
+            <span>Select your card theme.</span>
+            <form action="">
+                <label>
+                    <div class="label-div">
+                        <input type="radio" name="theme" value="star-wars-theme" checked>
+                        <img class="radio-img" src="sw_theme_pics/sw1.jpeg" alt="Star Wars Theme">
+                        <span>Star Wars</span>
+                    </div>
+                </label>
+
+                <label>
+                    <div class="label-div">
+                        <input type="radio" name="theme" value="plants-theme">
+                        <img class="radio-img" src="plants_theme_pics/pf6.webp" alt="Plants and Fruit Theme">
+                        <span>Plants & Fruits</span>
+                    </div>
+                </label>
+
+                <label>
+                    <div class="label-div">
+                        <input type="radio" name="theme" value="dogs-theme">
+                        <img class="radio-img" src="dog_theme_pics/d2.webp" alt="Dogs Theme">
+                        <span>Dogs</span>
+                    </div>
+                </label>
+
+            </form>
+
+            <button class="modal-x-btn">X</button>
+            <button class="modal-continue-play-btn" id="modal-play-btn">play!</button>
+            <button class="modal-back-btn">back</button>
+
+        </div> <!-- .form-container -->
+    </div> <!-- .#modal-themes -->
+
+
+    <!-- stores the playing cards for different card themes. always hidden. -->
+    <div class="store-box">
+
+        <div id="star-wars-theme">
+            <img src="sw_theme_pics/sw1.jpeg" alt="1">
+            <img src="sw_theme_pics/sw1.jpeg" alt="1">
+
+            <img src="sw_theme_pics/sw2.png" alt="2">
+            <img src="sw_theme_pics/sw2.png" alt="2">
+
+            <img src="sw_theme_pics/sw3.jpeg" alt="3">
+            <img src="sw_theme_pics/sw3.jpeg" alt="3">
+
+            <img src="sw_theme_pics/sw4.jpeg" alt="4">
+            <img src="sw_theme_pics/sw4.jpeg" alt="4">
+
+            <img src="sw_theme_pics/sw5.jpeg" alt="5">
+            <img src="sw_theme_pics/sw5.jpeg" alt="5">
+
+            <img src="sw_theme_pics/sw6.png" alt="6">
+            <img src="sw_theme_pics/sw6.png" alt="6">
+
+            <img src="sw_theme_pics/sw7.jpeg" alt="7">
+            <img src="sw_theme_pics/sw7.jpeg" alt="7">
+
+            <img src="sw_theme_pics/sw8.jpeg" alt="8">
+            <img src="sw_theme_pics/sw8.jpeg" alt="8">
+        </div> <!-- #star-wars-theme -->
+        
+
+        <div id="plants-theme">
+            <img src="plants_theme_pics/pf1.webp" alt="1">
+            <img src="plants_theme_pics/pf1.webp" alt="1">
+
+            <img src="plants_theme_pics/pf2.webp" alt="2">
+            <img src="plants_theme_pics/pf2.webp" alt="2">
+
+            <img src="plants_theme_pics/pf3.jpg" alt="3">
+            <img src="plants_theme_pics/pf3.jpg" alt="3">
+
+            <img src="plants_theme_pics/pf4.webp" alt="4">
+            <img src="plants_theme_pics/pf4.webp" alt="4">
+
+            <img src="plants_theme_pics/pf5.webp" alt="5">
+            <img src="plants_theme_pics/pf5.webp" alt="5">
+
+            <img src="plants_theme_pics/pf6.webp" alt="6">
+            <img src="plants_theme_pics/pf6.webp" alt="6">
+
+            <img src="plants_theme_pics/pf7.webp" alt="7">
+            <img src="plants_theme_pics/pf7.webp" alt="7">
+
+            <img src="plants_theme_pics/pf8.jpg" alt="8">
+            <img src="plants_theme_pics/pf8.jpg" alt="8">
+        </div> <!-- #plants-theme -->
+
+        <div id="dogs-theme">
+            <img src="dog_theme_pics/d1.webp" alt= "1">
+            <img src="dog_theme_pics/d1.webp" alt="1">
+
+            <img src="dog_theme_pics/d2.webp" alt="2">
+            <img src="dog_theme_pics/d2.webp" alt="2">
+
+            <img src="dog_theme_pics/d3.jpeg" alt="3">
+            <img src="dog_theme_pics/d3.jpeg" alt="3">
+
+            <img src="dog_theme_pics/d4.webp" alt="4">
+            <img src="dog_theme_pics/d4.webp" alt="4">
+
+            <img src="dog_theme_pics/d5.webp" alt="5">
+            <img src="dog_theme_pics/d5.webp" alt="5">
+
+            <img src="dog_theme_pics/d6.png" alt="6">
+            <img src="dog_theme_pics/d6.png" alt="6">
+
+            <img src="dog_theme_pics/d7.webp" alt="7">
+            <img src="dog_theme_pics/d7.webp" alt="7">
+
+            <img src="dog_theme_pics/d8.webp" alt="8">
+            <img src="dog_theme_pics/d8.webp" alt="8">
+        </div> <!-- #sdogs-theme -->
+
+    </div> <!-- .store-box -->
+
+
+    <script src="memory.js"></script>
+
+
+</body>
+
+</html>
